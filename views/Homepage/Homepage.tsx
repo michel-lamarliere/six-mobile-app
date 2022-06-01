@@ -123,7 +123,9 @@ const Homepage: React.FC<Props> = (props) => {
 					/>
 					<RoundedButton
 						text={"S'inscrire"}
-						onPress={() => {}}
+						onPress={() => {
+							props.navigation.navigate('SignUp');
+						}}
 						buttonStyle={styles.signUpButton}
 						textStyle={styles.signUpButtonText}
 					/>
@@ -199,10 +201,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'flex-end',
 		alignItems: 'center',
+		// justifyContent: 'center',
 	},
 	logInButton: {
 		backgroundColor: Colors.white,
 		marginBottom: 26,
+		width: 150,
 	},
 	logInButtonText: {
 		color: Colors.purple1,
@@ -210,6 +214,7 @@ const styles = StyleSheet.create({
 	signUpButton: {
 		backgroundColor: Colors.purple1,
 		marginBottom: 35,
+		width: 150,
 	},
 	signUpButtonText: {
 		color: Colors.white,

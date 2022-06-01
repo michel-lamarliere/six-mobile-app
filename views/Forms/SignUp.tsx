@@ -9,9 +9,8 @@ import {
 	Button,
 	GestureResponderEvent,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import { object, string } from 'yup';
 
 import { Input } from '../../components/form-elements/Inputs';
@@ -19,6 +18,7 @@ import FormContainer from '../../containers/LogInSignUpFormContainer';
 
 import Colors from '../../constants/colors';
 import RoundedButton from '../../components/buttons/RoundedButton';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
 	navigation: any;
@@ -40,14 +40,19 @@ const LogIn: React.FC<Props> = (props) => {
 			formHandler={() => {
 				console.log('Hello');
 			}}
-			headerTitle={'Vous revoilà !'}
-			footerText={'Pas de compte ?'}
-			footerTextLink={'Inscrivez-vous !'}
-			switchFormHandler={() => props.navigation.replace('SignUp')}
+			headerTitle={'Bienvenue !'}
+			footerText={'Déja membre ?'}
+			footerTextLink={'Connectez-vous !'}
+			switchFormHandler={() => props.navigation.replace('LogIn')}
 			responseMessage={''}
 		>
 			<Formik
-				initialValues={{ email: '', password: '' }}
+				initialValues={{
+					name: '',
+					email: '',
+					password: '',
+					passwordConfirmation: '',
+				}}
 				validationSchema={loginSchema}
 				onSubmit={(values) => console.log(values)}
 			>
@@ -63,6 +68,15 @@ const LogIn: React.FC<Props> = (props) => {
 					<>
 						<View style={styles.inputs}>
 							<Input
+								style={styles.notFirstInput}
+								placeholder={'Prénom'}
+								value={values.name}
+								onChangeText={handleChange('name')}
+								onBlur={handleBlur('name')}
+								isValid={!errors.name}
+								errorMessage={errors.name}
+							/>
+							<Input
 								placeholder={'Adresse mail'}
 								value={values.email}
 								onChangeText={handleChange('email')}
@@ -70,8 +84,9 @@ const LogIn: React.FC<Props> = (props) => {
 								isValid={!errors.email}
 								errorMessage={errors.email}
 							/>
+
 							<Input
-								style={styles.passwordInput}
+								style={styles.notFirstInput}
 								placeholder={'Mot de passe'}
 								value={values.password}
 								onChangeText={handleChange('password')}
@@ -79,26 +94,18 @@ const LogIn: React.FC<Props> = (props) => {
 								isValid={!errors.email}
 								errorMessage={errors.password}
 							/>
-							<View style={styles.checkboxContainer}>
-								<Pressable
-									onPress={() => setRememberEmail((prev) => !prev)}
-								>
-									<Image
-										source={
-											rememberEmail
-												? require('../../assets/icons/forms-inputs/remember-me_true.png')
-												: require('../../assets/icons/forms-inputs/remember-me_false.png')
-										}
-										width={25}
-										height={25}
-									/>
-								</Pressable>
-								<Text style={styles.checkboxText}>
-									Se souvenir de moi
-								</Text>
-							</View>
+							<Input
+								style={styles.notFirstInput}
+								placeholder={'Confirmation mot de passe'}
+								value={values.passwordConfirmation}
+								onChangeText={handleChange('passwordConfirmation')}
+								onBlur={handleBlur('passwordConfirmation')}
+								isValid={!errors.passwordConfirmation}
+								errorMessage={errors.passwordConfirmation}
+							/>
+
 							<RoundedButton
-								text={'Connexion'}
+								text={'Inscription'}
 								buttonStyle={styles.submitButton}
 								textStyle={styles.submitButtonText}
 								onPress={
@@ -111,8 +118,6 @@ const LogIn: React.FC<Props> = (props) => {
 					</>
 				)}
 			</Formik>
-
-			<Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
 		</FormContainer>
 	);
 };
@@ -121,21 +126,8 @@ const styles = StyleSheet.create({
 	inputs: {
 		marginTop: 77,
 	},
-	passwordInput: {
+	notFirstInput: {
 		marginTop: 14,
-	},
-	checkboxContainer: {
-		marginTop: 30,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginBottom: 16,
-	},
-	checkboxText: {
-		marginLeft: 8,
-		fontFamily: 'Poppins-Medium',
-		fontSize: 14,
-		color: Colors.lavender,
 	},
 	submitButton: {
 		marginTop: 8,
@@ -143,14 +135,6 @@ const styles = StyleSheet.create({
 	},
 	submitButtonText: {
 		color: Colors.purple2,
-	},
-	forgotPassword: {
-		marginTop: 110,
-		textAlign: 'center',
-		fontFamily: 'Poppins-Medium-Italic',
-		fontSize: 14,
-		color: Colors.lavender,
-		textDecorationLine: 'underline',
 	},
 });
 

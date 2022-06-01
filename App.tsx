@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 
 import Homepage from './views/Homepage/Homepage';
 import Login from './views/Forms/LogIn';
+import SignUp from './views/Forms/SignUp';
 
 import Colors from './constants/colors';
 
@@ -15,8 +16,10 @@ export default function App() {
 	const [fontsLoaded] = useFonts({
 		'Poppins-Regular': require('./assets/fonts/Poppins-Regular.ttf'),
 		'Poppins-Medium': require('./assets/fonts/Poppins-Medium.ttf'),
+		'Poppins-Medium-Italic': require('./assets/fonts/Poppins-MediumItalic.ttf'),
 		'Poppins-Semi-Bold': require('./assets/fonts/Poppins-SemiBold.ttf'),
 		'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
+		'Poppins-Extra-Bold': require('./assets/fonts/Poppins-ExtraBold.ttf'),
 	});
 
 	if (!fontsLoaded) {
@@ -38,6 +41,7 @@ export default function App() {
 					>
 						<Stack.Screen name='Homepage' component={Homepage} />
 						<Stack.Screen name='LogIn' component={Login} />
+						<Stack.Screen name='SignUp' component={SignUp} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</SafeAreaView>
