@@ -5,12 +5,11 @@ import Colors from '../../constants/colors';
 
 interface Props {
 	active: boolean;
-	onPress: (event: GestureResponderEvent) => void;
 }
 
 const CarouselButton: React.FC<Props> = (props) => {
 	return (
-		<Pressable style={styles.container} onPress={props.onPress}>
+		<Pressable style={styles.container}>
 			<View style={[styles.button, props.active && styles.active]}></View>
 		</Pressable>
 	);

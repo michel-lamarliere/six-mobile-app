@@ -33,6 +33,7 @@ const LogIn: React.FC<Props> = (props) => {
 			.min(8, 'Mot de passe trop court.')
 			.max(50, 'Mot de passe trop long.')
 			.required('Champ obligatoire.'),
+		passwordConfirmation: string(),
 	});
 
 	return (
@@ -77,6 +78,7 @@ const LogIn: React.FC<Props> = (props) => {
 								errorMessage={errors.name}
 							/>
 							<Input
+								style={styles.notFirstInput}
 								placeholder={'Adresse mail'}
 								value={values.email}
 								onChangeText={handleChange('email')}
@@ -103,7 +105,6 @@ const LogIn: React.FC<Props> = (props) => {
 								isValid={!errors.passwordConfirmation}
 								errorMessage={errors.passwordConfirmation}
 							/>
-
 							<RoundedButton
 								text={'Inscription'}
 								buttonStyle={styles.submitButton}
