@@ -15,7 +15,6 @@ import Colors from '../constants/colors';
 // import { useUserClass } from '../../styles/user-class-hook';
 
 interface Props {
-	formHandler: (event: GestureResponderEvent) => void;
 	headerTitle: string;
 	footerText: string;
 	footerTextLink: string;
@@ -43,7 +42,7 @@ const FormContainer: React.FC<Props> = (props) => {
 					</Pressable>
 					<Text style={styles.headerTitle}>{props.headerTitle}</Text>
 				</View>
-				{props.children}
+				<View style={styles.inputs}>{props.children}</View>
 			</View>
 			<View style={styles.footer}>
 				<Text style={styles.footerText}>{props.footerText} </Text>
@@ -89,6 +88,9 @@ const styles = StyleSheet.create({
 		fontFamily: 'Poppins-Extra-Bold',
 		fontSize: 24,
 		color: Colors.lavender,
+	},
+	inputs: {
+		marginTop: 40,
 	},
 	responseMessage: {},
 	footer: {

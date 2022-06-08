@@ -1,34 +1,61 @@
 import React, { useState } from 'react';
-import { TextInput, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import {
+	TextInput,
+	StyleSheet,
+	Text,
+	View,
+	ViewStyle,
+	KeyboardTypeOptions,
+	Pressable,
+} from 'react-native';
 
 import Colors from '../../constants/colors';
 
 interface Props {
 	placeholder: string;
 	value: string;
-	isValid: boolean;
+	touched: boolean | any;
+	error: boolean | any;
 	onChangeText: (event: any) => void;
 	onBlur: (event: any) => void;
-	errorMessage?: string;
 	style?: ViewStyle;
+	keyboardType?: KeyboardTypeOptions;
+	secureTextEntry?: boolean;
 }
 
 export const Input: React.FC<Props> = (props) => {
-	// const [showPassword, setShowPassword] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+
+	const isInvalid = props.touched && props.error;
 
 	return (
 		<View style={[styles.container, props.style]}>
 			<TextInput
-				style={[styles.input, !props.isValid && styles.invalid]}
+				style={[styles.input, isInvalid && styles.invalid]}
 				placeholder={props.placeholder}
 				placeholderTextColor={Colors.lavender}
 				value={props.value}
 				onChangeText={props.onChangeText}
 				onBlur={props.onBlur}
+				autoCapitalize={'none'}
+				keyboardType={props.keyboardType}
+				secureTextEntry={showPassword && props.secureTextEntry}
 			/>
-			<Text style={styles.errorMessage}>{props.errorMessage}</Text>
+			{props.secureTextEntry && (
+				<Pressable onPress={() => setShowPassword((prev) => !prev)}>
+					<Text>{showPassword ? 'Show Password' : 'Hide Password'}</Text>
+				</Pressable>
+			)}
+			{isInvalid && (
+				<Text style={styles.errorMessage}>{isInvalid && props.error}</Text>
+			)}
 		</View>
 	);
+};
+
+Input.defaultProps = {
+	keyboardType: 'default',
+	secureTextEntry: false,
 };
 
 const styles = StyleSheet.create({
@@ -53,6 +80,7 @@ const styles = StyleSheet.create({
 	},
 	errorMessage: {
 		marginLeft: 1,
+		marginTop: 2,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 12,
 		color: Colors.blue1,
