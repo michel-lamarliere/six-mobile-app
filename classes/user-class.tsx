@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormatUserName } from '../hooks/format-user-name';
 
 import { AppDispatch, RootState } from '../store/store';
@@ -13,7 +13,7 @@ export const useUserClass = () => {
 	const navigation = useNavigation<any>();
 	const { formatUserName } = useFormatUserName();
 
-	// const userState = useSelector((state: RootState) => state.user);
+	const userState = useSelector((state: RootState) => state.user);
 
 	class User {
 		static async logIn(data: UserType) {
@@ -51,7 +51,6 @@ export const useUserClass = () => {
 					confirmedEmail: user.confirmedEmail,
 				})
 			);
-			console.log(user);
 
 			navigation.navigate('Authenticated');
 		}
@@ -59,11 +58,8 @@ export const useUserClass = () => {
 		static async logOut() {
 			dispatch(LOG_USER_OUT());
 
-			const tesgt = await AsyncStorage.removeItem('user');
+			await AsyncStorage.removeItem('user');
 
-			const test = JSON.stringify(tesgt);
-
-			console.log(test);
 			navigation.navigate('Homepage');
 		}
 

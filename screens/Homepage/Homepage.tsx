@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 		color: Colors.main2,
 	},
 	contactButton: {
-		marginBottom: 50,
+		marginBottom: 20,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 14,
 		textDecorationLine: 'underline',

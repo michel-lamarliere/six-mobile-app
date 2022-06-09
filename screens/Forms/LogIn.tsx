@@ -65,8 +65,6 @@ const LogIn: React.FC<Props> = (props) => {
 			// | error: boolean,
 			| any = await response.json();
 
-		console.log(responseData);
-
 		if (response.status === 200) {
 			User.logIn(responseData);
 		}
@@ -119,8 +117,8 @@ const LogIn: React.FC<Props> = (props) => {
 							touched={touched.password}
 							error={errors.password}
 						/>
-						<View style={styles.checkboxContainer}>
-							<Pressable onPress={() => setRememberEmail((prev) => !prev)}>
+						<Pressable onPress={() => setRememberEmail((prev) => !prev)}>
+							<View style={styles.checkboxContainer}>
 								<Image
 									source={
 										rememberEmail
@@ -130,9 +128,11 @@ const LogIn: React.FC<Props> = (props) => {
 									width={25}
 									height={25}
 								/>
-							</Pressable>
-							<Text style={styles.checkboxText}>Se souvenir de moi</Text>
-						</View>
+								<Text style={styles.checkboxText}>
+									Se souvenir de moi
+								</Text>
+							</View>
+						</Pressable>
 						<RoundedButton
 							text={'Connexion'}
 							buttonStyle={styles.submitButton}

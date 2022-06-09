@@ -23,14 +23,11 @@ export const counterSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 		LOG_USER_IN: (state: UserType, action: PayloadAction<UserType>) => {
-			state = {
-				token: action.payload.token,
-				// tokenExpiration = action.payload.tokenExpiration
-				icon: action.payload.icon,
-				name: action.payload.name,
-				email: action.payload.email,
-				confirmedEmail: action.payload.confirmedEmail,
-			};
+			(state.token = action.payload.token),
+				(state.icon = action.payload.icon),
+				(state.name = action.payload.name),
+				(state.email = action.payload.email),
+				(state.confirmedEmail = action.payload.confirmedEmail);
 		},
 
 		LOG_USER_OUT: (state: UserType) => {
@@ -45,14 +42,10 @@ export const counterSlice = createSlice({
 		},
 
 		REFRESH_USER_DATA: (state: UserType, action: PayloadAction<UserType>) => {
-			state = {
-				token: state.token,
-				// tokenExpiration: null,
-				icon: action.payload.icon,
-				name: action.payload.name,
-				email: action.payload.email,
-				confirmedEmail: action.payload.confirmedEmail,
-			};
+			(state.icon = action.payload.icon),
+				(state.name = action.payload.name),
+				(state.email = action.payload.email),
+				(state.confirmedEmail = action.payload.confirmedEmail);
 		},
 	},
 });

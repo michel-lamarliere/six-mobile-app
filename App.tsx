@@ -30,80 +30,72 @@ const Tab = createBottomTabNavigator();
 
 const Unauthenticated = () => {
 	return (
-		<Stack.Navigator
-			screenOptions={{
-				headerShown: false,
-			}}
-		>
-			<Stack.Screen name='Homepage' component={Homepage} />
-			<Stack.Screen name='LogIn' component={Login} />
-			<Stack.Screen name='SignUp' component={SignUp} />
-		</Stack.Navigator>
+		<>
+			<SafeAreaView style={styles.safeAreaTop}></SafeAreaView>
+			<SafeAreaView style={styles.safeAreaBottom}>
+				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					<Stack.Screen name='Homepage' component={Homepage} />
+					<Stack.Screen name='LogIn' component={Login} />
+					<Stack.Screen name='SignUp' component={SignUp} />
+				</Stack.Navigator>
+			</SafeAreaView>
+		</>
 	);
 };
 
 const Authenticated = () => {
 	return (
-		<Tab.Navigator
-			screenOptions={{
-				headerShown: false,
-			}}
-		>
-			<Tab.Screen
-				name='DailyView'
-				component={DailyView}
-				options={{ title: 'Daily' }}
-			/>
-			<Tab.Screen
-				name='WeeklyView'
-				component={WeeklyView}
-				options={{ title: 'Weekly' }}
-			/>
-			<Tab.Screen
-				name='MonthlyView'
-				component={MonthlyView}
-				options={{ title: 'Monthly' }}
-			/>
-			<Tab.Screen name='Profile' component={Profile} />
-		</Tab.Navigator>
+		<SafeAreaView style={styles.safeAreaAuthenticated}>
+			<Tab.Navigator
+				screenOptions={{
+					headerShown: false,
+					tabBarStyle: styles.tabBarStyle,
+					tabBarLabelStyle: styles.tabBarLabelStyle,
+					tabBarActiveTintColor: Colors.accent2,
+					tabBarInactiveTintColor: Colors.accent4,
+				}}
+			>
+				<Tab.Screen
+					name='DailyView'
+					component={DailyView}
+					options={{ title: 'Daily' }}
+				/>
+				<Tab.Screen
+					name='WeeklyView'
+					component={WeeklyView}
+					options={{ title: 'Weekly' }}
+				/>
+				<Tab.Screen
+					name='MonthlyView'
+					component={MonthlyView}
+					options={{ title: 'Monthly' }}
+				/>
+				<Tab.Screen name='Profile' component={Profile} />
+			</Tab.Navigator>
+		</SafeAreaView>
 	);
 };
 
 const Navigation = () => {
-	const userState = useSelector((state: RootState) => state.user);
-	const [isLoading, setIsLoading] = useState(true);
-
 	const User = useUserClass();
 
-	const authentication = async () => {
-		await User.autoLogIn();
-		setIsLoading(false);
-	};
-
 	useEffect(() => {
-		authentication();
+		setTimeout(() => {
+			User.autoLogIn();
+		}, 100);
 	}, []);
 
-	// if (isLoading) {
-	// 	return <Text>Hello</Text>;
-	// }
-
 	return (
-		<>
+		<SafeAreaProvider>
 			<Stack.Navigator
 				screenOptions={{
 					headerShown: false,
 				}}
 			>
-				<Stack.Screen name='Homepage' component={Homepage} />
-				<Stack.Screen name='LogIn' component={Login} />
-				<Stack.Screen name='SignUp' component={SignUp} />
+				<Stack.Screen name='Unauthenticated' component={Unauthenticated} />
 				<Stack.Screen name='Authenticated' component={Authenticated} />
 			</Stack.Navigator>
-
-			{/* {userState.token && <Authenticated />} */}
-			{/* {!userState.token && <Unauthenticated />} */}
-		</>
+		</SafeAreaProvider>
 	);
 };
 
@@ -113,6 +105,7 @@ const App = () => {
 		'Poppins-Medium': require('./assets/fonts/Poppins-Medium.ttf'),
 		'Poppins-Medium-Italic': require('./assets/fonts/Poppins-MediumItalic.ttf'),
 		'Poppins-Semi-Bold': require('./assets/fonts/Poppins-SemiBold.ttf'),
+		'Poppins-Semi-Bold-Italic': require('./assets/fonts/Poppins-SemiBoldItalic.ttf'),
 		'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
 		'Poppins-Extra-Bold': require('./assets/fonts/Poppins-ExtraBold.ttf'),
 	});
@@ -123,25 +116,35 @@ const App = () => {
 
 	return (
 		<Provider store={store}>
-			<SafeAreaProvider>
-				<StatusBar barStyle={'light-content'} />
-				<SafeAreaView style={styles.safeAreaView}>
-					{/* <SafeAreaView style={styles.safeAreaView2}> */}
-					<NavigationContainer>
-						<Navigation />
-					</NavigationContainer>
-					{/* </SafeAreaView> */}
-				</SafeAreaView>
-			</SafeAreaProvider>
+			<StatusBar barStyle={'light-content'} />
+			<NavigationContainer>
+				<Navigation />
+			</NavigationContainer>
 		</Provider>
 	);
 };
 
 const styles = StyleSheet.create({
-	safeAreaView: {
-		flex: 1,
+	safeAreaTop: {
+		flex: 0,
 		backgroundColor: Colors.main,
-		// position: 'absolute',
+	},
+	safeAreaBottom: {
+		flex: 1,
+		backgroundColor: Colors.main3,
+	},
+	safeAreaAuthenticated: {
+		flex: 1,
+		backgroundColor: Colors.main3,
+	},
+	tabBarStyle: {
+		backgroundColor: Colors.main3,
+	},
+	tabBarActiveTintColor: {
+		color: Colors.accent,
+	},
+	tabBarLabelStyle: {
+		fontSize: 14,
 	},
 });
 
