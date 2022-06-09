@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontFamily: 'Poppins-Medium',
 		fontSize: 14,
-		color: Colors.white,
+		color: Colors.main2,
 		marginTop: 10,
 	},
 	title3: { marginTop: 38, textAlign: 'center' },

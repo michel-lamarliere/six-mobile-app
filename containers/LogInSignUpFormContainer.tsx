@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-	View,
-	StyleSheet,
-	Image,
-	Pressable,
-	Text,
-	GestureResponderEvent,
-} from 'react-native';
+import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import RoundedButton from '../components/buttons/RoundedButton';
 import Colors from '../constants/colors';
-
-// import { useUserClass } from '../../styles/user-class-hook';
 
 interface Props {
 	headerTitle: string;
@@ -24,7 +14,6 @@ interface Props {
 
 const FormContainer: React.FC<Props> = (props) => {
 	const navigation = useNavigation();
-	// const { User } = useUserClass();
 
 	const backButtonHandler = () => {
 		navigation.goBack();
@@ -43,6 +32,7 @@ const FormContainer: React.FC<Props> = (props) => {
 					<Text style={styles.headerTitle}>{props.headerTitle}</Text>
 				</View>
 				<View style={styles.inputs}>{props.children}</View>
+				<Text>{props.responseMessage}</Text>
 			</View>
 			<View style={styles.footer}>
 				<Text style={styles.footerText}>{props.footerText} </Text>
@@ -60,7 +50,7 @@ const FormContainer: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: Colors.purple1,
+		backgroundColor: Colors.main,
 		flex: 1,
 		paddingTop: 20,
 		paddingHorizontal: 38,
@@ -78,7 +68,7 @@ const styles = StyleSheet.create({
 		width: 30,
 		height: 30,
 		borderRadius: 30 / 2,
-		backgroundColor: Colors.purple2,
+		backgroundColor: Colors.accent3,
 	},
 	backButtonImage: {
 		width: 5,
@@ -87,7 +77,7 @@ const styles = StyleSheet.create({
 	headerTitle: {
 		fontFamily: 'Poppins-Extra-Bold',
 		fontSize: 24,
-		color: Colors.lavender,
+		color: Colors.accent,
 	},
 	inputs: {
 		marginTop: 40,
@@ -101,18 +91,18 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		width: '100%',
 		height: 90,
-		backgroundColor: Colors.purple3,
+		backgroundColor: Colors.accent2,
 	},
 	footerText: {
 		fontFamily: 'Poppins-Medium',
 		fontSize: 16,
-		color: Colors.white,
+		color: Colors.main2,
 	},
 	footerButton: {},
 	footerButtonText: {
 		fontFamily: 'Poppins-Bold',
 		fontSize: 16,
-		color: Colors.white,
+		color: Colors.main2,
 		textDecorationLine: 'underline',
 	},
 });

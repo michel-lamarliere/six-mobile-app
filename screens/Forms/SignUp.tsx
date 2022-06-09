@@ -4,23 +4,28 @@ import { StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import { object, string, ref } from 'yup';
 
+import { useUserClass } from '../../classes/user-class';
+
 import { Input } from '../../components/form-elements/Inputs';
 import FormContainer from '../../containers/LogInSignUpFormContainer';
 
 import Colors from '../../constants/colors';
 import RoundedButton from '../../components/buttons/RoundedButton';
 
+import { BACKEND_API_URL } from '@env';
+
 interface Props {
 	navigation: any;
 }
 
 const LogIn: React.FC<Props> = (props) => {
+	const User = useUserClass();
 	const [serverResponseMessage, setServerResponseMessage] = useState('');
 
-	let loginSchema = object({
+	let signUpSchema = object({
 		name: string()
 			.required('Champ obligatoire.')
-			.min(1, '1 caractères minimum.')
+			.min(2, '1 caractères minimum.')
 			.max(20, 'Nom trop long (20 caractères maximum).'),
 		email: string().required('Champ obligatoire.').email('Format invalide.'),
 		password: string()
@@ -36,31 +41,70 @@ const LogIn: React.FC<Props> = (props) => {
 			.oneOf([ref('password'), null], 'Les mots de passe doivent correspondre.'),
 	});
 
+	const serverInputErrorsHandler = (responseData: any, actions: any) => {
+		if (!responseData) {
+			return;
+		}
+
+		if (!responseData.validInputs.name) {
+			actions.setFieldError('name', 'Format incorrect.');
+		}
+
+		if (!responseData.validInputs.email.format) {
+			actions.setFieldError('email', 'Format incorrect.r');
+		}
+
+		if (!responseData.validInputs.email.isAvailable) {
+			actions.setFieldError(
+				'email',
+				'Email déjà utilisé. Veuillez en choisir une autre ou vous connecter.'
+			);
+		}
+
+		if (!responseData.validInputs.password) {
+			actions.setFieldError('email', 'Format incorrect.');
+		}
+
+		if (!responseData.validInputs.password) {
+			actions.setFieldError(
+				'password',
+				'Les mots de passe doivent être identiques.'
+			);
+		}
+	};
+
 	const submitHandler = async (values: {
 		name: string;
 		email: string;
 		password: string;
 		passwordConfirmation: string;
 	}) => {
-		console.log('Hello');
-
-		const response = await fetch(
-			'https://six-app-server.herokuapp.com/api/user/sign-up',
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'Application/json' },
-				body: JSON.stringify({
-					name: values.name,
-					email: values.email,
-					password: values.password,
-					passwordConfirmation: values.passwordConfirmation,
-				}),
-			}
-		);
+		const response = await fetch(`${BACKEND_API_URL}/users/sign-up`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'Application/json' },
+			body: JSON.stringify({
+				name: values.name.trim().toLowerCase(),
+				email: values.email.trim().toLowerCase(),
+				password: values.password,
+				passwordConfirmation: values.passwordConfirmation,
+			}),
+		});
 
 		const responseData = await response.json();
 
-		console.log(responseData);
+		if (response.status === 201) {
+			User.logIn(responseData);
+		}
+
+		if (response.status === 400) {
+			return responseData;
+		}
+
+		if (response.status === 404) {
+			setServerResponseMessage(
+				"Erreur lors de l'inscription, veuillez réessayer plus tard."
+			);
+		}
 	};
 
 	return (
@@ -78,9 +122,11 @@ const LogIn: React.FC<Props> = (props) => {
 					password: '',
 					passwordConfirmation: '',
 				}}
-				validationSchema={loginSchema}
-				onSubmit={(values) => {
-					console.log(values), submitHandler(values);
+				validationSchema={signUpSchema}
+				onSubmit={(values, actions: any) => {
+					submitHandler(values).then((responseData) => {
+						serverInputErrorsHandler(responseData, actions);
+					});
 				}}
 			>
 				{({
@@ -154,7 +200,7 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	submitButtonText: {
-		color: Colors.purple2,
+		color: Colors.main,
 	},
 });
 

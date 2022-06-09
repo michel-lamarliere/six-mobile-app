@@ -45,7 +45,7 @@ const Homepage: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
-		backgroundColor: Colors.purple1,
+		backgroundColor: Colors.main,
 	},
 	backgroundImage: {
 		bottom: -5,
@@ -56,27 +56,27 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	logInButton: {
-		backgroundColor: Colors.white,
+		backgroundColor: Colors.main2,
 		marginBottom: 26,
 		width: 150,
 	},
 	logInButtonText: {
-		color: Colors.purple1,
+		color: Colors.accent2,
 	},
 	signUpButton: {
-		backgroundColor: Colors.purple1,
+		backgroundColor: Colors.accent2,
 		marginBottom: 35,
 		width: 150,
 	},
 	signUpButtonText: {
-		color: Colors.white,
+		color: Colors.main2,
 	},
 	contactButton: {
-		marginBottom: 20,
+		marginBottom: 50,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 14,
 		textDecorationLine: 'underline',
-		color: Colors.white,
+		color: Colors.main2,
 	},
 });
 

@@ -1,47 +1,79 @@
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	Text,
 	Image,
 	View,
 	StyleSheet,
 	Pressable,
-	TextInput,
-	Button,
 	GestureResponderEvent,
 } from 'react-native';
 
 import { Formik } from 'formik';
+import { object, ref, string } from 'yup';
+
+import { useUserClass } from '../../classes/user-class';
+
+import UserType from '../../types/user-type';
 
 import { Input } from '../../components/form-elements/Inputs';
 import FormContainer from '../../containers/LogInSignUpFormContainer';
+import RoundedButton from '../../components/buttons/RoundedButton';
 
 import Colors from '../../constants/colors';
-import RoundedButton from '../../components/buttons/RoundedButton';
+
+import { BACKEND_API_URL } from '@env';
 
 interface Props {
 	navigation: any;
 }
 
 const LogIn: React.FC<Props> = (props) => {
+	const User = useUserClass();
+
 	const [rememberEmail, setRememberEmail] = useState(false);
-	// const [formValues, setFormValues] = useState({});
+	const [serverResponseMessage, setServerResponseMessage] = useState('');
+
+	let logInSchema = object({
+		email: string().required('Champ obligatoire.'),
+		password: string().required('Champ obligatoire.'),
+	});
+
+	const serverInputErrorsHandler = (responseData: any, actions: any) => {
+		if (!responseData) {
+			return;
+		}
+
+		if (!responseData.validInputs.email) {
+			actions.setFieldError('email', 'Email introuvable.');
+		} else if (!responseData.validInputs.password) {
+			actions.setFieldError('password', 'Mot de passe incorrect.');
+		}
+	};
 
 	const submitHandler = async (values: { email: string; password: string }) => {
-		const response = await fetch(
-			'https://six-app-server.herokuapp.com/api/user/sign-in',
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'Application/json' },
-				body: JSON.stringify({
-					email: values.email,
-					password: values.password,
-				}),
-			}
-		);
+		const response = await fetch(`${BACKEND_API_URL}/users/sign-in`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'Application/json' },
+			body: JSON.stringify({
+				email: values.email,
+				password: values.password,
+			}),
+		});
 
-		const responseData = await response.json();
+		const responseData:
+			| UserType
+			// | error: boolean,
+			| any = await response.json();
 
 		console.log(responseData);
+
+		if (response.status === 200) {
+			User.logIn(responseData);
+		}
+
+		if (response.status === 400) {
+			return responseData;
+		}
 	};
 
 	return (
@@ -50,12 +82,15 @@ const LogIn: React.FC<Props> = (props) => {
 			footerText={'Pas de compte ?'}
 			footerTextLink={'Inscrivez-vous !'}
 			switchFormHandler={() => props.navigation.replace('SignUp')}
-			responseMessage={''}
+			responseMessage={serverResponseMessage}
 		>
 			<Formik
 				initialValues={{ email: '', password: '' }}
-				onSubmit={(values) => {
-					console.log(values), submitHandler(values);
+				validationSchema={logInSchema}
+				onSubmit={(values, actions) => {
+					submitHandler(values).then((responseData: any) => {
+						serverInputErrorsHandler(responseData, actions);
+					});
 				}}
 			>
 				{({
@@ -131,21 +166,21 @@ const styles = StyleSheet.create({
 		marginLeft: 8,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 14,
-		color: Colors.lavender,
+		color: Colors.accent,
 	},
 	submitButton: {
 		marginTop: 8,
 		alignSelf: 'center',
 	},
 	submitButtonText: {
-		color: Colors.purple2,
+		color: Colors.main,
 	},
 	forgotPassword: {
 		marginTop: 110,
 		textAlign: 'center',
 		fontFamily: 'Poppins-Medium-Italic',
 		fontSize: 14,
-		color: Colors.lavender,
+		color: Colors.accent,
 		textDecorationLine: 'underline',
 	},
 });

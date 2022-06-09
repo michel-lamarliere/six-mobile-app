@@ -99,25 +99,25 @@ const styles = StyleSheet.create({
 	carouselQuestion: {
 		fontFamily: 'Poppins-Bold',
 		fontSize: 18,
-		color: Colors.white,
+		color: Colors.main2,
 	},
 	carouselAnswer: {
 		marginTop: 20,
 		marginBottom: 60,
 		fontFamily: 'Poppins-Regular',
 		fontSize: 14,
-		color: Colors.white,
+		color: Colors.main2,
 	},
 	carouselTitle: {
 		fontFamily: 'Poppins-Semi-Bold',
 		fontSize: 16,
-		color: Colors.white,
+		color: Colors.main2,
 	},
 	carouselDescription: {
 		marginTop: 20,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 14,
-		color: Colors.white,
+		color: Colors.main2,
 	},
 	carouselGrid: {
 		flexDirection: 'row',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 14,
-		color: Colors.lavender,
+		color: Colors.accent,
 		textDecorationLine: 'underline',
 	},
 });

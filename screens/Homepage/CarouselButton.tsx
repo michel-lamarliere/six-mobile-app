@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
 		borderWidth: 1.5,
 		borderRadius: 14 / 2,
 		borderStyle: 'solid',
-		borderColor: Colors.white,
+		borderColor: Colors.main2,
 	},
 	active: {
-		backgroundColor: Colors.lavender,
+		backgroundColor: Colors.accent,
 	},
 });
 

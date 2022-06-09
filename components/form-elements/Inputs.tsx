@@ -33,7 +33,7 @@ export const Input: React.FC<Props> = (props) => {
 			<TextInput
 				style={[styles.input, isInvalid && styles.invalid]}
 				placeholder={props.placeholder}
-				placeholderTextColor={Colors.lavender}
+				placeholderTextColor={Colors.accent}
 				value={props.value}
 				onChangeText={props.onChangeText}
 				onBlur={props.onBlur}
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
 		width: '100%',
 		paddingHorizontal: 14,
 		paddingVertical: 16,
-		backgroundColor: Colors.purple2,
-		color: Colors.white,
+		backgroundColor: Colors.accent3,
+		color: Colors.main2,
 		fontFamily: 'Poppins-Regular',
 		fontSize: 16,
 		borderWidth: 2,
@@ -76,13 +76,13 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	invalid: {
-		borderColor: Colors.blue1,
+		borderColor: Colors.error,
 	},
 	errorMessage: {
 		marginLeft: 1,
 		marginTop: 2,
 		fontFamily: 'Poppins-Medium',
 		fontSize: 12,
-		color: Colors.blue1,
+		color: Colors.error,
 	},
 });
