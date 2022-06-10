@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, StatusBar, View } from 'react-native';
-import {
-	createNavigationContainerRef,
-	NavigationContainer,
-} from '@react-navigation/native';
+import { NavigationContainer, useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SafeAreaView from 'react-native-safe-area-view';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -20,63 +17,70 @@ import DailyView from './screens/views/DailyView';
 import WeeklyView from './screens/views/WeeklyView';
 import MonthlyView from './screens/views/MonthlyView';
 import Profile from './screens/Profile/Profile';
+import EditIcon from './screens/edit-profile/EditIcon';
 
 import Colors from './constants/colors';
 import { useUserClass } from './classes/user-class';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const BottomTabs = createBottomTabNavigator();
 
 const Unauthenticated = () => {
 	return (
-		<>
-			<SafeAreaView style={styles.safeAreaTop}></SafeAreaView>
-			<SafeAreaView style={styles.safeAreaBottom}>
-				<Stack.Navigator screenOptions={{ headerShown: false }}>
-					<Stack.Screen name='Homepage' component={Homepage} />
-					<Stack.Screen name='LogIn' component={Login} />
-					<Stack.Screen name='SignUp' component={SignUp} />
-				</Stack.Navigator>
-			</SafeAreaView>
-		</>
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name='Homepage' component={Homepage} />
+			<Stack.Screen name='LogIn' component={Login} />
+			<Stack.Screen name='SignUp' component={SignUp} />
+		</Stack.Navigator>
 	);
 };
 
-const Authenticated = () => {
+const ProfileStack = () => {
 	return (
-		<SafeAreaView style={styles.safeAreaAuthenticated}>
-			<Tab.Navigator
-				screenOptions={{
-					headerShown: false,
-					tabBarStyle: styles.tabBarStyle,
-					tabBarLabelStyle: styles.tabBarLabelStyle,
-					tabBarActiveTintColor: Colors.accent2,
-					tabBarInactiveTintColor: Colors.accent4,
-				}}
-			>
-				<Tab.Screen
-					name='DailyView'
-					component={DailyView}
-					options={{ title: 'Daily' }}
-				/>
-				<Tab.Screen
-					name='WeeklyView'
-					component={WeeklyView}
-					options={{ title: 'Weekly' }}
-				/>
-				<Tab.Screen
-					name='MonthlyView'
-					component={MonthlyView}
-					options={{ title: 'Monthly' }}
-				/>
-				<Tab.Screen name='Profile' component={Profile} />
-			</Tab.Navigator>
-		</SafeAreaView>
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name='Profile' component={Profile} />
+			<Stack.Screen name='EditIcon' component={EditIcon} />
+		</Stack.Navigator>
 	);
 };
 
-const Navigation = () => {
+const BottomTabsScreens = () => {
+	return (
+		<BottomTabs.Navigator
+			screenOptions={{
+				headerShown: false,
+				tabBarStyle: styles.tabBarStyle,
+				tabBarLabelStyle: styles.tabBarLabelStyle,
+				tabBarActiveTintColor: Colors.main2,
+				tabBarInactiveTintColor: Colors.accent,
+			}}
+		>
+			<BottomTabs.Screen
+				name='DailyView'
+				component={DailyView}
+				options={{ title: 'Daily' }}
+			/>
+			<BottomTabs.Screen
+				name='WeeklyView'
+				component={WeeklyView}
+				options={{ title: 'Weekly' }}
+			/>
+			<BottomTabs.Screen
+				name='MonthlyView'
+				component={MonthlyView}
+				options={{ title: 'Monthly' }}
+			/>
+			<BottomTabs.Screen
+				name='ProfileStack'
+				component={ProfileStack}
+				options={{ title: 'Profile' }}
+			/>
+		</BottomTabs.Navigator>
+	);
+};
+
+const Navigation: React.FC = () => {
 	const User = useUserClass();
 
 	useEffect(() => {
@@ -87,19 +91,25 @@ const Navigation = () => {
 
 	return (
 		<SafeAreaProvider>
-			<Stack.Navigator
-				screenOptions={{
-					headerShown: false,
-				}}
-			>
-				<Stack.Screen name='Unauthenticated' component={Unauthenticated} />
-				<Stack.Screen name='Authenticated' component={Authenticated} />
-			</Stack.Navigator>
+			<SafeAreaView style={styles.safeAreaTop} />
+			<SafeAreaView style={styles.safeAreaBottom}>
+				<Stack.Navigator
+					screenOptions={{
+						headerShown: false,
+					}}
+				>
+					<Stack.Screen name='Unauthenticated' component={Unauthenticated} />
+					<Stack.Screen
+						name='BottomTabsScreens'
+						component={BottomTabsScreens}
+					/>
+				</Stack.Navigator>
+			</SafeAreaView>
 		</SafeAreaProvider>
 	);
 };
 
-const App = () => {
+const App: React.FC = () => {
 	const [fontsLoaded] = useFonts({
 		'Poppins-Regular': require('./assets/fonts/Poppins-Regular.ttf'),
 		'Poppins-Medium': require('./assets/fonts/Poppins-Medium.ttf'),
@@ -128,23 +138,29 @@ const styles = StyleSheet.create({
 	safeAreaTop: {
 		flex: 0,
 		backgroundColor: Colors.main,
+		// backgroundColor: 'transparent',
 	},
 	safeAreaBottom: {
 		flex: 1,
 		backgroundColor: Colors.main3,
 	},
-	safeAreaAuthenticated: {
-		flex: 1,
+	safeAreaAuthenticatedTop: {
+		flex: 0,
 		backgroundColor: Colors.main3,
+	},
+	safeAreaAuthenticatedBottom: {
+		flex: 1,
+		backgroundColor: Colors.accent2,
 	},
 	tabBarStyle: {
-		backgroundColor: Colors.main3,
-	},
-	tabBarActiveTintColor: {
-		color: Colors.accent,
+		backgroundColor: Colors.accent2,
+		height: 60,
+		paddingTop: 0,
+		paddingBottom: 0,
 	},
 	tabBarLabelStyle: {
 		fontSize: 14,
+		paddingBottom: 2,
 	},
 });
 

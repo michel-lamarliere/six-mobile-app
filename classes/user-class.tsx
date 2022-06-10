@@ -13,10 +13,11 @@ export const useUserClass = () => {
 	const navigation = useNavigation<any>();
 	const { formatUserName } = useFormatUserName();
 
-	const userState = useSelector((state: RootState) => state.user);
-
 	class User {
 		static async logIn(data: UserType) {
+			const userJson = JSON.stringify(data);
+			await AsyncStorage.setItem('user', userJson);
+
 			dispatch(
 				LOG_USER_IN({
 					token: data.token,
@@ -27,10 +28,10 @@ export const useUserClass = () => {
 				})
 			);
 
-			const userJson = JSON.stringify(data);
-			await AsyncStorage.setItem('user', userJson);
-
-			navigation.navigate('Authenticated');
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'BottomTabsScreens', key: 'DailyView' }],
+			});
 		}
 
 		static async autoLogIn() {
@@ -52,7 +53,10 @@ export const useUserClass = () => {
 				})
 			);
 
-			navigation.navigate('Authenticated');
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'BottomTabsScreens', key: 'DailyView' }],
+			});
 		}
 
 		static async logOut() {
@@ -60,7 +64,10 @@ export const useUserClass = () => {
 
 			await AsyncStorage.removeItem('user');
 
-			navigation.navigate('Homepage');
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'Unauthenticated', key: 'Homepage' }],
+			});
 		}
 
 		static isUserLoggedIn(userState: UserType) {

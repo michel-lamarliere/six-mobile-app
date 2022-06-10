@@ -7,6 +7,8 @@ import {
 	ViewStyle,
 	KeyboardTypeOptions,
 	Pressable,
+	NativeSyntheticEvent,
+	TextInputFocusEventData,
 } from 'react-native';
 
 import Colors from '../../constants/colors';
@@ -14,10 +16,10 @@ import Colors from '../../constants/colors';
 interface Props {
 	placeholder: string;
 	value: string;
-	touched: boolean | any;
-	error: boolean | any;
-	onChangeText: (event: any) => void;
-	onBlur: (event: any) => void;
+	touched: boolean | undefined;
+	errorText: string | undefined;
+	onChangeText: (text: string) => void;
+	onBlur: (event: NativeSyntheticEvent<TextInputFocusEventData>) => void;
 	style?: ViewStyle;
 	keyboardType?: KeyboardTypeOptions;
 	secureTextEntry?: boolean;
@@ -26,7 +28,7 @@ interface Props {
 export const Input: React.FC<Props> = (props) => {
 	const [showPassword, setShowPassword] = useState(false);
 
-	const isInvalid = props.touched && props.error;
+	const isInvalid = !!props.touched && !!props.errorText;
 
 	return (
 		<View style={[styles.container, props.style]}>
@@ -47,7 +49,7 @@ export const Input: React.FC<Props> = (props) => {
 				</Pressable>
 			)}
 			{isInvalid && (
-				<Text style={styles.errorMessage}>{isInvalid && props.error}</Text>
+				<Text style={styles.errorMessage}>{isInvalid && props.errorText}</Text>
 			)}
 		</View>
 	);

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { object, string, ref } from 'yup';
 
 import { useUserClass } from '../../classes/user-class';
 
-import { Input } from '../../components/form-elements/Inputs';
+import { Input } from '../../components/form-elements/Input';
 import FormContainer from '../../containers/LogInSignUpFormContainer';
 
 import Colors from '../../constants/colors';
@@ -16,6 +16,26 @@ import { BACKEND_API_URL } from '@env';
 
 interface Props {
 	navigation: any;
+}
+
+interface SignUpResponseData {
+	validInputs: {
+		all: boolean;
+		name: boolean;
+		email: {
+			format: boolean;
+			isAvailable: boolean;
+		};
+		password: boolean;
+		passwordConfirmation: boolean;
+	};
+}
+
+interface SignUpInputs {
+	name: string;
+	email: string;
+	password: string;
+	passwordConfirmation: string;
 }
 
 const LogIn: React.FC<Props> = (props) => {
@@ -41,7 +61,10 @@ const LogIn: React.FC<Props> = (props) => {
 			.oneOf([ref('password'), null], 'Les mots de passe doivent correspondre.'),
 	});
 
-	const serverInputErrorsHandler = (responseData: any, actions: any) => {
+	const serverInputErrorsHandler = (
+		responseData: SignUpResponseData,
+		actions: FormikHelpers<SignUpInputs>
+	) => {
 		if (!responseData) {
 			return;
 		}
@@ -123,7 +146,7 @@ const LogIn: React.FC<Props> = (props) => {
 					passwordConfirmation: '',
 				}}
 				validationSchema={signUpSchema}
-				onSubmit={(values, actions: any) => {
+				onSubmit={(values, actions) => {
 					submitHandler(values).then((responseData) => {
 						serverInputErrorsHandler(responseData, actions);
 					});
@@ -144,7 +167,7 @@ const LogIn: React.FC<Props> = (props) => {
 							onChangeText={handleChange('name')}
 							onBlur={handleBlur('name')}
 							touched={touched.name}
-							error={errors.name}
+							errorText={errors.name}
 						/>
 						<Input
 							style={styles.notFirstInput}
@@ -153,7 +176,7 @@ const LogIn: React.FC<Props> = (props) => {
 							onChangeText={handleChange('email')}
 							onBlur={handleBlur('email')}
 							touched={touched.email}
-							error={errors.email}
+							errorText={errors.email}
 							keyboardType={'email-address'}
 						/>
 						<Input
@@ -163,7 +186,7 @@ const LogIn: React.FC<Props> = (props) => {
 							onChangeText={handleChange('password')}
 							onBlur={handleBlur('password')}
 							touched={touched.password}
-							error={errors.password}
+							errorText={errors.password}
 							secureTextEntry={true}
 						/>
 						<Input
@@ -173,7 +196,7 @@ const LogIn: React.FC<Props> = (props) => {
 							onChangeText={handleChange('passwordConfirmation')}
 							onBlur={handleBlur('passwordConfirmation')}
 							touched={touched.passwordConfirmation}
-							error={errors.passwordConfirmation}
+							errorText={errors.passwordConfirmation}
 							secureTextEntry={true}
 						/>
 						<RoundedButton

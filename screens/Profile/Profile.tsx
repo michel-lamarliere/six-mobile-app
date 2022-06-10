@@ -6,6 +6,7 @@ import {
 	Image,
 	GestureResponderEvent,
 	Pressable,
+	ScrollView,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -14,11 +15,16 @@ import { RootState } from '../../store/store';
 import { useUserClass } from '../../classes/user-class';
 
 import RoundedButton from '../../components/buttons/RoundedButton';
-import EditProfileLink from './EditProfileButton/EditProfileLink';
+import EditProfileLink from './EditProfileLink/EditProfileLink';
 
 import Colors from '../../constants/colors';
+import user from '../../store/user';
 
-const DailyView: React.FC = () => {
+interface Props {
+	navigation: any;
+}
+
+const DailyView: React.FC<Props> = (props) => {
 	const User = useUserClass();
 
 	const userState = useSelector((state: RootState) => state.user);
@@ -26,7 +32,11 @@ const DailyView: React.FC = () => {
 	const [showMenu, setShowMenu] = useState(true);
 
 	return (
-		<View style={styles.wrapper}>
+		<ScrollView
+			style={styles.wrapper}
+			bounces={false}
+			contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+		>
 			<View style={styles.user}>
 				<Image
 					source={require('../../assets/icons/user/icon_0.png')}
@@ -35,16 +45,26 @@ const DailyView: React.FC = () => {
 				<Text style={styles.name}>{userState.name}</Text>
 			</View>
 			{!userState.confirmedEmail && (
-				<Pressable onPress={() => {}}>
-					<View style={styles.confirmedEmail}>
-						<Text style={styles.confirmedEmailText}>
-							Adresse mail non confirmée
-						</Text>
-						<Image
-							source={require('../../assets/icons/profile/profile-confirmed-email-arrow.png')}
-							style={styles.confirmedEmailIcon}
-						/>
-					</View>
+				<Pressable onPress={() => {}} style={styles.confirmedEmail}>
+					{({ pressed }) => (
+						<>
+							<Text
+								style={[
+									styles.confirmedEmailText,
+									pressed && styles.confirmedEmailTextPressed,
+								]}
+							>
+								Adresse mail non confirmée
+							</Text>
+							<Image
+								source={require('../../assets/icons/profile/profile-confirmed-email-arrow.png')}
+								style={[
+									styles.confirmedEmailIcon,
+									pressed && styles.confirmedEmailIconPressed,
+								]}
+							/>
+						</>
+					)}
 				</Pressable>
 			)}
 			<RoundedButton
@@ -62,22 +82,35 @@ const DailyView: React.FC = () => {
 				onPress={() => {
 					setShowMenu((prev) => !prev);
 				}}
+				style={styles.editProfileButton}
 			>
-				<View style={styles.editProfileButton}>
-					<Text style={styles.editProfileButtonText}>Éditer le profil</Text>
-					<Image
-						source={require('../../assets/icons/profile/profile-arrow-down.png')}
-						style={[
-							styles.editProfileButtonImage,
-							showMenu && styles.editProfileButtonImageOpenned,
-						]}
-					/>
-				</View>
+				{({ pressed }) => (
+					<>
+						<Text
+							style={[
+								styles.editProfileButtonText,
+								pressed && styles.editProfileButtonTextPressed,
+							]}
+						>
+							Éditer le profil
+						</Text>
+						<Image
+							source={require('../../assets/icons/profile/profile-arrow-down.png')}
+							style={[
+								styles.editProfileButtonImage,
+								pressed && styles.editProfileButtonImagePressed,
+								showMenu && styles.editProfileButtonImageOpenned,
+							]}
+						/>
+					</>
+				)}
 			</Pressable>
 			{showMenu && (
 				<View style={styles.editProfileList}>
 					<EditProfileLink
-						onPress={() => {}}
+						onPress={() => {
+							props.navigation.navigate('EditIcon');
+						}}
 						iconPath={require('../../assets/icons/profile/profile-modify-icon.png')}
 						text={'Icon'}
 					/>
@@ -96,8 +129,17 @@ const DailyView: React.FC = () => {
 						iconPath={require('../../assets/icons/profile/profile-modify-password.png')}
 						text={'Mot de passe'}
 					/>
-					<Pressable onPress={() => {}}>
-						<Text style={styles.deleteAccount}>Supprimer mon compte</Text>
+					<Pressable style={styles.deleteAccount} onPress={() => {}}>
+						{({ pressed }) => (
+							<Text
+								style={[
+									styles.deleteAccountText,
+									pressed && styles.deleteAccountTextPressed,
+								]}
+							>
+								Supprimer mon compte
+							</Text>
+						)}
 					</Pressable>
 				</View>
 			)}
@@ -105,24 +147,21 @@ const DailyView: React.FC = () => {
 				onPress={() => {
 					User.logOut();
 				}}
+				style={styles.logOut}
 			>
-				<View style={styles.logOut}>
-					<Image
-						source={require('../../assets/icons/profile/profile-log-out.png')}
-						style={styles.logOutIcon}
-					/>
-					<Text style={styles.logOutText}>Déconnexion</Text>
-				</View>
+				<Image
+					source={require('../../assets/icons/profile/profile-log-out.png')}
+					style={styles.logOutIcon}
+				/>
+				<Text style={styles.logOutText}>Déconnexion</Text>
 			</Pressable>
-		</View>
+		</ScrollView>
 	);
 };
 
 const styles = StyleSheet.create({
 	wrapper: {
-		flex: 1,
 		backgroundColor: Colors.main3,
-		alignItems: 'center',
 	},
 	user: {
 		marginTop: 40,
@@ -149,10 +188,16 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: Colors.accent4,
 	},
+	confirmedEmailTextPressed: {
+		opacity: 0.75,
+	},
 	confirmedEmailIcon: {
 		width: 20,
 		height: 20,
 		marginLeft: 10,
+	},
+	confirmedEmailIconPressed: {
+		opacity: 0.75,
 	},
 	statsButton: {
 		marginTop: 45,
@@ -176,8 +221,14 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		color: Colors.accent,
 	},
+	editProfileButtonTextPressed: {
+		opacity: 0.75,
+	},
 	editProfileButtonImage: {
 		marginLeft: 18,
+	},
+	editProfileButtonImagePressed: {
+		opacity: 0.75,
 	},
 	editProfileButtonImageOpenned: {
 		transform: [{ rotateX: '180deg' }],
@@ -187,13 +238,19 @@ const styles = StyleSheet.create({
 	},
 	deleteAccount: {
 		marginTop: 10,
+	},
+	deleteAccountText: {
 		fontFamily: 'Poppins-Semi-Bold-Italic',
 		color: Colors.accent,
 		fontSize: 13,
 	},
+	deleteAccountTextPressed: {
+		opacity: 0.75,
+	},
 	logOut: {
-		flexDirection: 'row',
 		marginTop: 60,
+		marginBottom: 20,
+		flexDirection: 'row',
 	},
 	logOutIcon: {
 		width: 23,

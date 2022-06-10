@@ -8,7 +8,7 @@ interface Props {
 	headerTitle: string;
 	footerText: string;
 	footerTextLink: string;
-	switchFormHandler: any;
+	switchFormHandler: () => void;
 	responseMessage: string;
 }
 
