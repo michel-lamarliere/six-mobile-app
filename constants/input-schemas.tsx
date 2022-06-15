@@ -9,7 +9,7 @@ export const nameSchema = string()
   .min(2, "2 caractères minimum.")
   .max(20, "Nom trop long (20 caractères maximum).");
 
-export const emailSchema = string()
+export const emailAddressSchema = string()
   .required("Champ obligatoire.")
   .email("Format invalide.");
 

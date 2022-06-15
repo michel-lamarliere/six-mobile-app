@@ -37,7 +37,14 @@ export const Input: React.FC<Props> = (props) => {
   const isInvalid = !!props.touched && !!props.errorText;
 
   return (
-    <View style={[styles.container, props.style]}>
+    <View
+      style={[
+        styles.container,
+        props.variant === InputVariantTypes.EDIT_PROFILE &&
+          styles.containerEditProfile,
+        props.style,
+      ]}
+    >
       <TextInput
         style={[
           styles.input,
@@ -81,6 +88,9 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
   },
+  containerEditProfile: {
+    marginTop: 40,
+  },
   input: {
     height: 50,
     width: "100%",
@@ -98,7 +108,6 @@ const styles = StyleSheet.create({
   },
   editProfile: {
     backgroundColor: Colors.main4,
-    marginTop: 60,
   },
   invalid: {
     borderColor: Colors.error,

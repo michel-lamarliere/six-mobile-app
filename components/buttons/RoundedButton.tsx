@@ -14,7 +14,6 @@ export enum RoundedButtonVariantTypes {
 }
 
 interface CommonProps {
-  text: string;
   onPress: ((event: GestureResponderEvent) => void) | any;
   variant?: RoundedButtonVariantTypes;
 }
@@ -22,6 +21,7 @@ interface CommonProps {
 type ConditionalProps =
   | {
       variant?: RoundedButtonVariantTypes.DEFAULT;
+      text: string;
       buttonStyle: TextStyle;
       textStyle: TextStyle;
     }
@@ -29,6 +29,7 @@ type ConditionalProps =
       variant?: RoundedButtonVariantTypes.EDIT_PROFILE;
       buttonStyle?: never;
       textStyle?: never;
+      text?: never;
     };
 
 type Props = CommonProps & ConditionalProps;
@@ -53,7 +54,9 @@ const RoundedButton: React.FC<Props> = (props) => {
             styles.editProfileText,
         ]}
       >
-        {props.text}
+        {props.variant === RoundedButtonVariantTypes.EDIT_PROFILE
+          ? "Enregistrer "
+          : props.text}
       </Text>
       {props.children}
     </Pressable>

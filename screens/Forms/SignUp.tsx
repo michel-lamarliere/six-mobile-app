@@ -4,17 +4,16 @@ import { StyleSheet } from "react-native";
 import { Formik, FormikHelpers } from "formik";
 import { object } from "yup";
 
-import { useUserClass } from "../../classes/user-class";
+import { useUserClass } from "../../classes/user";
+import { useHttpRequest } from "../../hooks/http-request";
 
 import { Input } from "../../components/form-elements/Input";
 import FormContainer from "../../containers/LogInSignUpFormContainer";
 
 import Colors from "../../constants/colors";
 import RoundedButton from "../../components/buttons/RoundedButton";
-
-import { BACKEND_API_URL } from "@env";
 import {
-  emailSchema,
+  emailAddressSchema,
   nameSchema,
   passwordConfirmationSchema,
   passwordSchema,
@@ -28,7 +27,7 @@ interface SignUpResponseData {
   validInputs: {
     all: boolean;
     name: boolean;
-    email: {
+    emailAddress: {
       format: boolean;
       isAvailable: boolean;
     };
@@ -39,18 +38,20 @@ interface SignUpResponseData {
 
 interface SignUpInputs {
   name: string;
-  email: string;
+  emailAddress: string;
   password: string;
   passwordConfirmation: string;
 }
 
 const LogIn: React.FC<Props> = (props) => {
   const User = useUserClass();
+  const { sendRequest } = useHttpRequest();
+
   const [serverResponseMessage, setServerResponseMessage] = useState("");
 
   let signUpSchema = object({
     name: nameSchema,
-    email: emailSchema,
+    emailAddress: emailAddressSchema,
     password: passwordSchema,
     passwordConfirmation: passwordConfirmationSchema,
   });
@@ -67,19 +68,19 @@ const LogIn: React.FC<Props> = (props) => {
       actions.setFieldError("name", "Format incorrect.");
     }
 
-    if (!responseData.validInputs.email.format) {
-      actions.setFieldError("email", "Format incorrect.r");
+    if (!responseData.validInputs.emailAddress.format) {
+      actions.setFieldError("emailAddress", "Format incorrect.");
     }
 
-    if (!responseData.validInputs.email.isAvailable) {
+    if (!responseData.validInputs.emailAddress.isAvailable) {
       actions.setFieldError(
-        "email",
+        "emailAddress",
         "Email déjà utilisé. Veuillez en choisir une autre ou vous connecter."
       );
     }
 
     if (!responseData.validInputs.password) {
-      actions.setFieldError("email", "Format incorrect.");
+      actions.setFieldError("emailAddress", "Format incorrect.");
     }
 
     if (!responseData.validInputs.password) {
@@ -92,22 +93,20 @@ const LogIn: React.FC<Props> = (props) => {
 
   const submitHandler = async (values: {
     name: string;
-    email: string;
+    emailAddress: string;
     password: string;
     passwordConfirmation: string;
   }) => {
-    const response = await fetch(`${BACKEND_API_URL}/users/sign-up`, {
+    const { response, responseData } = await sendRequest({
+      url: "/users/sign-up",
       method: "POST",
-      headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({
         name: values.name.trim().toLowerCase(),
-        email: values.email.trim().toLowerCase(),
+        emailAddress: values.emailAddress.trim().toLowerCase(),
         password: values.password,
         passwordConfirmation: values.passwordConfirmation,
       }),
     });
-
-    const responseData = await response.json();
 
     if (response.status === 201) {
       User.logIn(responseData);
@@ -131,11 +130,12 @@ const LogIn: React.FC<Props> = (props) => {
       footerTextLink={"Connectez-vous !"}
       switchFormHandler={() => props.navigation.replace("LogIn")}
       responseMessage={serverResponseMessage}
+      setResponseMessage={setServerResponseMessage}
     >
       <Formik
         initialValues={{
           name: "",
-          email: "",
+          emailAddress: "",
           password: "",
           passwordConfirmation: "",
         }}
@@ -166,11 +166,11 @@ const LogIn: React.FC<Props> = (props) => {
             <Input
               style={styles.notFirstInput}
               placeholder={"Adresse mail"}
-              value={values.email}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              touched={touched.email}
-              errorText={errors.email}
+              value={values.emailAddress}
+              onChangeText={handleChange("emailAddress")}
+              onBlur={handleBlur("emailAddress")}
+              touched={touched.emailAddress}
+              errorText={errors.emailAddress}
               keyboardType={"email-address"}
             />
             <Input

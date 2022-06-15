@@ -12,7 +12,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Formik, FormikHelpers } from "formik";
 import { object, string } from "yup";
 
-import { useUserClass } from "../../classes/user-class";
+import { useUserClass } from "../../classes/user";
+import { useHttpRequest } from "../../hooks/http-request";
 
 import { Input } from "../../components/form-elements/Input";
 import FormContainer from "../../containers/LogInSignUpFormContainer";
@@ -20,34 +21,33 @@ import RoundedButton from "../../components/buttons/RoundedButton";
 
 import Colors from "../../constants/colors";
 
-import { BACKEND_API_URL } from "@env";
-
 interface Props {
   navigation: any;
 }
 
 interface LogInErrorResponseData {
   validInputs: {
-    email: boolean;
+    emailAddress: boolean;
     password: boolean;
   };
 }
 
 interface LogInInputs {
-  email: string;
+  emailAddress: string;
   password: string;
 }
 
 const LogIn: React.FC<Props> = (props) => {
   const User = useUserClass();
+  const { sendRequest } = useHttpRequest();
 
-  const [rememberEmail, setRememberEmail] = useState(false);
-  const [rememberedEmail, setRememberedEmail] = useState("");
+  const [rememberEmailAddress, setRememberEmailAddress] = useState(false);
+  const [rememberedEmailAddress, setRememberedEmailAddress] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [serverResponseMessage, setServerResponseMessage] = useState("");
 
   let logInSchema = object({
-    email: string().required("Champ obligatoire."),
+    emailAddress: string().required("Champ obligatoire."),
     password: string().required("Champ obligatoire."),
   });
 
@@ -59,32 +59,30 @@ const LogIn: React.FC<Props> = (props) => {
       return;
     }
 
-    if (!responseData.validInputs.email) {
-      actions.setFieldError("email", "Email introuvable.");
+    if (!responseData.validInputs.emailAddress) {
+      actions.setFieldError("emailAddress", "Email introuvable.");
     } else if (!responseData.validInputs.password) {
       actions.setFieldError("password", "Mot de passe incorrect.");
     }
   };
 
   const submitHandler = async (values: {
-    email: string;
+    emailAddress: string;
     password: string;
   }): Promise<LogInErrorResponseData | void> => {
-    const response = await fetch(`${BACKEND_API_URL}/users/sign-in`, {
+    const { response, responseData } = await sendRequest({
+      url: "/users/sign-in",
       method: "POST",
-      headers: { "Content-Type": "Application/json" },
       body: JSON.stringify({
-        email: values.email,
+        emailAddress: values.emailAddress,
         password: values.password,
       }),
     });
 
-    const responseData = await response.json();
-
     if (response.status === 200 && !responseData.validInputs) {
-      if (rememberEmail) {
-        await AsyncStorage.setItem("remembered-email", values.email);
-      } else if (!rememberEmail && rememberedEmail.length > 0) {
+      if (rememberEmailAddress) {
+        await AsyncStorage.setItem("remembered-email", values.emailAddress);
+      } else if (!rememberEmailAddress && rememberedEmailAddress.length > 0) {
         await AsyncStorage.removeItem("remembered-email");
       }
 
@@ -96,20 +94,19 @@ const LogIn: React.FC<Props> = (props) => {
     }
   };
 
-  const getRememberedEmail = async () => {
+  const getRememberedEmailAddress = async () => {
     const rememberedEmail = await AsyncStorage.getItem("remembered-email");
-    console.log(rememberedEmail);
 
     if (rememberedEmail) {
-      setRememberedEmail(rememberedEmail);
-      setRememberEmail(true);
+      setRememberedEmailAddress(rememberedEmail);
+      setRememberEmailAddress(true);
     }
 
     setIsLoading(false);
   };
 
   useLayoutEffect(() => {
-    getRememberedEmail();
+    getRememberedEmailAddress();
   }, []);
 
   if (isLoading) {
@@ -123,9 +120,10 @@ const LogIn: React.FC<Props> = (props) => {
       footerTextLink={"Inscrivez-vous !"}
       switchFormHandler={() => props.navigation.replace("SignUp")}
       responseMessage={serverResponseMessage}
+      setResponseMessage={setServerResponseMessage}
     >
       <Formik
-        initialValues={{ email: rememberedEmail, password: "" }}
+        initialValues={{ emailAddress: rememberedEmailAddress, password: "" }}
         validationSchema={logInSchema}
         onSubmit={(
           values: LogInInputs,
@@ -149,11 +147,11 @@ const LogIn: React.FC<Props> = (props) => {
           <>
             <Input
               placeholder={"Adresse mail"}
-              value={values.email}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              touched={touched.email}
-              errorText={errors.email}
+              value={values.emailAddress}
+              onChangeText={handleChange("emailAddress")}
+              onBlur={handleBlur("emailAddress")}
+              touched={touched.emailAddress}
+              errorText={errors.emailAddress}
             />
             <Input
               style={styles.passwordInput}
@@ -165,11 +163,11 @@ const LogIn: React.FC<Props> = (props) => {
               errorText={errors.password}
               secureTextEntry={true}
             />
-            <Pressable onPress={() => setRememberEmail((prev) => !prev)}>
+            <Pressable onPress={() => setRememberEmailAddress((prev) => !prev)}>
               <View style={styles.checkboxContainer}>
                 <Image
                   source={
-                    rememberEmail
+                    rememberEmailAddress
                       ? require("../../assets/icons/forms-inputs/remember-me_true.png")
                       : require("../../assets/icons/forms-inputs/remember-me_false.png")
                   }

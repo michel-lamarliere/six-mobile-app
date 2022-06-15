@@ -11,12 +11,15 @@ import { useSelector } from "react-redux";
 
 import { RootState } from "../../store/store";
 
-import { useUserClass } from "../../classes/user-class";
+import { useUserClass } from "../../classes/user";
+
+import formatUserName from "../../utils/format-user-name";
 
 import RoundedButton from "../../components/buttons/RoundedButton";
-import EditProfileLink from "./EditProfileLink/EditProfileLink";
+import EditProfileLink from "./EditProfileLink";
 
 import Colors from "../../constants/colors";
+import UserIcon from "../../components/ui-elements/UserIcon";
 
 interface Props {
   navigation: any;
@@ -36,11 +39,8 @@ const DailyView: React.FC<Props> = (props) => {
       contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
     >
       <View style={styles.user}>
-        <Image
-          source={require("../../assets/icons/user/icon_0.png")}
-          style={styles.icon}
-        />
-        <Text style={styles.name}>{userState.name}</Text>
+        <UserIcon />
+        <Text style={styles.name}>{formatUserName(userState.name)}</Text>
       </View>
       {!userState.confirmedEmail && (
         <Pressable onPress={() => {}} style={styles.confirmedEmail}>
@@ -121,7 +121,7 @@ const DailyView: React.FC<Props> = (props) => {
           />
           <EditProfileLink
             onPress={() => {
-              props.navigation.navigate("EditEmail");
+              props.navigation.navigate("EditEmailAddress");
             }}
             iconPath={require("../../assets/icons/profile/profile-modify-email.png")}
             text={"Adresse mail"}

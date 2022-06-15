@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import Colors from "../constants/colors";
@@ -6,9 +6,24 @@ import Colors from "../constants/colors";
 interface Props {
   navigation: any;
   title: string;
+  responseMessage: string;
+  setResponseMessage: Dispatch<SetStateAction<string>>;
 }
 
 const EditProfileContainer: React.FC<Props> = (props) => {
+  useEffect(() => {
+    if (props.responseMessage.length > 0) {
+      const responseMessageTimeout = setTimeout(() => {
+        props.setResponseMessage("");
+      }, 3000);
+
+
+      return () => {
+        clearTimeout(responseMessageTimeout);
+      };
+    }
+  }, [props.responseMessage]);
+
   return (
     <View style={styles.wrapper}>
       <Pressable
@@ -22,6 +37,7 @@ const EditProfileContainer: React.FC<Props> = (props) => {
       </Pressable>
       <Text style={styles.title}>{props.title}</Text>
       <View style={styles.children}>{props.children}</View>
+      <Text style={styles.responseMessage}>{props.responseMessage}</Text>
     </View>
   );
 };
@@ -48,6 +64,11 @@ const styles = StyleSheet.create({
   children: {
     width: "100%",
     paddingHorizontal: 25,
+  },
+  responseMessage: {
+    marginTop: 20,
+    color: Colors.main2,
+    fontSize: 14,
   },
 });
 

@@ -10,17 +10,18 @@ import { useFonts } from "expo-font";
 
 import store from "./store/store";
 
-import { useUserClass } from "./classes/user-class";
+import { useUserClass } from "./classes/user";
 
 import Homepage from "./screens/Homepage";
 import Login from "./screens/Forms/LogIn";
 import SignUp from "./screens/Forms/SignUp";
-import DailyView from "./screens/views/DailyView";
-import WeeklyView from "./screens/views/WeeklyView";
-import MonthlyView from "./screens/views/MonthlyView";
+import DailyView from "./screens/views/Daily";
+import WeeklyView from "./screens/views/Weekly";
+import MonthlyView from "./screens/views/Monthly";
 import Profile from "./screens/Profile";
 import EditIcon from "./screens/edit-profile/EditIcon";
 import EditName from "./screens/edit-profile/EditName";
+import EditEmailAddress from "./screens/edit-profile/EditEmailAddress";
 
 import Colors from "./constants/colors";
 
@@ -78,6 +79,7 @@ const ProfileStack = () => {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="EditIcon" component={EditIcon} />
       <Stack.Screen name="EditName" component={EditName} />
+      <Stack.Screen name="EditEmailAddress" component={EditEmailAddress} />
     </Stack.Navigator>
   );
 };
@@ -139,11 +141,11 @@ const App: React.FC = () => {
 const styles = StyleSheet.create({
   safeAreaTop: {
     flex: 0,
-    backgroundColor: Colors.main,
+    backgroundColor: Colors.main3,
   },
   safeAreaBottom: {
     flex: 1,
-    backgroundColor: Colors.main3,
+    backgroundColor: Colors.accent2,
   },
   safeAreaAuthenticatedTop: {
     flex: 0,
