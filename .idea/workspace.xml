@@ -2,32 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4e7080f1-01ca-4035-ae1d-25552ce29c24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/ui-elements/UserIcon.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/check-user-exists.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/http-request.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/screens/edit-profile/EditEmailAddress.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/format-user-name.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/user-class.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/classes/user.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/buttons/RoundedButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/buttons/RoundedButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/form-elements/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/form-elements/Input.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants/input-schemas.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/constants/input-schemas.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/containers/EditProfileContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/containers/EditProfileContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/containers/LogInSignUpFormContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/containers/LogInSignUpFormContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/format-user-name.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Forms/LogIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Forms/LogIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Forms/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Forms/SignUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Profile/EditProfileLink/EditProfileLink.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Profile/EditProfileLink.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Profile/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Profile/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/edit-profile/EditIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/edit-profile/EditIcon.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/edit-profile/EditName.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/edit-profile/EditName.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/views/DailyView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/views/Daily.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/views/MonthlyView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/views/Monthly.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/views/WeeklyView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/views/Weekly.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/user.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/store/user.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/user-type.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/types/user.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,10 +49,11 @@
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;/Users/michel/.nvm/versions/node/v16.15.0/lib/node_modules/eslint&quot;,
     &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;/Users/michel/.nvm/versions/node/v16.15.0/bin/node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/michel/.nvm/versions/node/v16.15.0/lib/node_modules/prettier&quot;,
     &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.tabs&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/michel/Dev/Projects/six/mobile-app/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -104,7 +80,10 @@
       <workItem from="1655214262869" duration="1589000" />
       <workItem from="1655216258604" duration="1726000" />
       <workItem from="1655218401245" duration="8579000" />
-      <workItem from="1655280738387" duration="22399000" />
+      <workItem from="1655280738387" duration="22693000" />
+      <workItem from="1655366015907" duration="15000" />
+      <workItem from="1655366215822" duration="495000" />
+      <workItem from="1655370387915" duration="244000" />
     </task>
     <servers />
   </component>
