@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers, FormikValues } from 'formik';
 import { object, string } from 'yup';
 
 import { RootState } from '../../store/store';
@@ -13,7 +13,9 @@ import EditProfileContainer from '../../containers/EditProfileContainer';
 import RoundedButton, {
 	RoundedButtonVariantTypes,
 } from '../../components/buttons/RoundedButton';
+
 import Colors from '../../constants/colors';
+import { emailAddressSchema } from '../../constants/input-schemas';
 
 interface Props {
 	navigation: any;
@@ -26,12 +28,23 @@ const EditEmailAddress: React.FC<Props> = (props) => {
 
 	const [serverResponseMessage, setServerResponseMessage] = useState('');
 
-	const handleServerResponse = (responseData: any, actions: any) => {
+	const formValidationSchema = object({
+		emailAddress: emailAddressSchema.notOneOf(
+			[userState.emailAddress],
+			"La nouvelle adresse mail ne peut pas être identique à l'actuelle."
+		),
+	});
+
+	const serverResponseHandler = (
+		responseData: any,
+		actions: FormikHelpers<{ emailAddress: string }>
+	) => {
 		if (!responseData) {
 			return;
 		}
 
 		if (responseData.used) {
+			console.log('hello');
 			actions.setFieldError(
 				'emailAddress',
 				'Adresse mail déjà utilisée, veuillez en choisir une autre.'
@@ -39,14 +52,18 @@ const EditEmailAddress: React.FC<Props> = (props) => {
 		}
 	};
 
-	const changeEmailAddressHandler = async (values: { emailAddress: string }) => {
+	const submitHandler = async (values: { emailAddress: string }) => {
 		const { response, responseData } = await sendRequest({
-			url: `/users/modify/email-address`,
+			url: '/users/modify/email-address/send-emails',
 			method: 'PATCH',
 			body: JSON.stringify({
-				emailAddress: values.emailAddress,
+				newEmailAddress: values.emailAddress,
 			}),
 		});
+
+		if (!responseData) {
+			return;
+		}
 
 		if (response.status === 200) {
 			setServerResponseMessage(
@@ -54,18 +71,14 @@ const EditEmailAddress: React.FC<Props> = (props) => {
 			);
 		}
 
-		console.log(responseData);
-	};
+		if (response.status === 400 && responseData.waitFiveMinutes) {
+			setServerResponseMessage(
+				'Veuillez attendre 5 minutes entre chaque envoi de mail.'
+			);
+		}
 
-	const validationSchema = object({
-		emailAddress: string()
-			.required('Champ obligatoire.')
-			.email('Format invalide.')
-			.notOneOf(
-				[userState.emailAddress],
-				"La nouvelle adresse mail ne peut pas être identique à l'actuelle."
-			),
-	});
+		return responseData;
+	};
 
 	return (
 		<EditProfileContainer
@@ -76,12 +89,12 @@ const EditEmailAddress: React.FC<Props> = (props) => {
 		>
 			<Formik
 				initialValues={{ emailAddress: '' }}
-				validationSchema={validationSchema}
-				onSubmit={(values, actions) =>
-					changeEmailAddressHandler(values).then((responseData) => {
-						handleServerResponse(responseData, actions);
-					})
-				}
+				validationSchema={formValidationSchema}
+				onSubmit={(values, actions) => {
+					submitHandler(values).then((responseData) => {
+						serverResponseHandler(responseData, actions);
+					});
+				}}
 			>
 				{({
 					handleChange,
@@ -100,13 +113,13 @@ const EditEmailAddress: React.FC<Props> = (props) => {
 						</View>
 						<Input
 							variant={InputVariantTypes.EDIT_PROFILE}
+							style={styles.input}
+							placeholder={'alicia@email.com'}
 							value={values.emailAddress}
-							errorText={errors.emailAddress}
 							onChangeText={handleChange('emailAddress')}
 							onBlur={handleBlur('emailAddress')}
 							touched={touched.emailAddress}
-							placeholder={'alicia@email.com'}
-							style={styles.input}
+							errorText={errors.emailAddress}
 						/>
 						<RoundedButton
 							onPress={handleSubmit}

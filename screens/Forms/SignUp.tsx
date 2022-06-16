@@ -52,7 +52,7 @@ const LogIn: React.FC<Props> = (props) => {
 
 	const [serverResponseMessage, setServerResponseMessage] = useState('');
 
-	let signUpSchema = object({
+	let formValidationSchema = object({
 		name: nameSchema,
 		emailAddress: emailAddressSchema,
 		password: passwordSchema,
@@ -111,7 +111,9 @@ const LogIn: React.FC<Props> = (props) => {
 			}),
 		});
 
-		console.log(responseData);
+		if (!responseData) {
+			return;
+		}
 
 		if (response.status === 201) {
 			const responseUserData: User = responseData;
@@ -145,7 +147,7 @@ const LogIn: React.FC<Props> = (props) => {
 					password: '',
 					passwordConfirmation: '',
 				}}
-				validationSchema={signUpSchema}
+				validationSchema={formValidationSchema}
 				onSubmit={(values, actions) => {
 					submitHandler(values).then((responseData) => {
 						serverInputErrorsHandler(responseData, actions);
@@ -203,9 +205,7 @@ const LogIn: React.FC<Props> = (props) => {
 							text={'Inscription'}
 							buttonStyle={styles.submitButton}
 							textStyle={styles.submitButtonText}
-							onPress={() => {
-								handleSubmit();
-							}}
+							onPress={handleSubmit}
 						/>
 					</>
 				)}
